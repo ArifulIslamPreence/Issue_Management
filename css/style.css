@@ -1,0 +1,49 @@
+
+
+select {
+    width: 80px;
+    padding: 5px;
+    font-size: 16px;
+    line-height: 1;
+    border: 0;
+    border-radius: 5px;
+    height: 34px;
+    background: url(http://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/br_down.png) no-repeat right #ddd;
+    -webkit-appearance: none;
+    background-position-x: 59px;
+    -moz-appearance: none;
+    /*for chrome*/
+    -webkit-appearance:none;
+
+}
+
+.user-info input[type="text"],.user-info
+textarea {
+    -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+    appearance: textfield;
+    width: 80px;
+    height: 34px;
+    padding: 5px;
+    font-size: 16px;
+    background-color: #ddd;
+    border-radius: 5px;
+}
+.userFont
+{
+   color:blue;
+}
+
+.register input[type="text"],.register
+
+textarea {
+    -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+    appearance: textfield;
+    width: 180px;
+    height: 34px;
+    padding: 5px;
+    font-size: 16px;
+    background-color: #ddd;
+    border-radius: 5px;
+}
