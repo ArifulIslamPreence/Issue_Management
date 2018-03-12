@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once("connectionDB.php");
  //die(print_r($_POST));
 
@@ -23,16 +24,17 @@ if (isset($_POST['submit']))
     $crm = $_POST["crm"];
     $impact = $_POST["impact"];
 
-    if ($_POST["name"] != ""  && $_POST["issueDate"] != "" && $_POST["issueDetails"]!="" && $_POST["issueOf"]!="" ) {
+    //die(print_r($issueDate));
+
+    if ($_POST["name"] != ""  && $_POST["issueDate"] != "" && $_POST["issueDetails"]!="" && $_POST["date"]!=""  && $_POST["issueOf"]!="" ) {
         $insert = oci_parse($conn,"INSERT INTO ISSUE_REGISTRATION(USER_NAME,DIVISION_ID,DEPARTMENT_ID,SECTIONS_ID,LOCATIONS_ID,SUPERVISOR,ISSUE_DATE,ISSUE_DETAILS,ISSUE_OF,MODULES_ID,MENU_ID,REQUEST_TO,CRM_REF,IMPACT) VALUES ('$username','$division','$Department','$section','$location','$supervisor','$issueDate','$issueDetails','$issueOf','$module','$menu','$request','$crm','$impact')");
         //$sql="INSERT INTO ISSUE_REGISTRATION(USER_NAME,DIVISION,DEPARTMENT,SECTIONS,LOCATIONS,SUPERVISOR,ISSUE_DATE,MODULES,MENU,REQUEST_TO,CRM_REF,IMPACT) VALUES ('$username','$division','$Department','$section','$location','$supervisor','$issueDate','$module','$menu','$request','$crm','$impact')";
         //die(print_r($sql,true));
 
         oci_execute($insert);
-        header('Location:index.php');
-        echo '<script language="javascript">';
-        //echo 'alert("Success!!!")';
-        echo '</script>';
+        $_SESSION['saved'] = "save";
+       // header('Location:index.php');
+
     } else {
         echo '<script language="javascript">';
         echo 'alert("Please fill up the blue labeled fields!!")';
@@ -58,7 +60,7 @@ if (isset($_POST['update']))
     $crm = $_POST["crm"];
     $impact = $_POST["impact"];
     $tableId=$_POST["idval"];
-    //die(print ($tableId));
+
     $update=oci_parse($conn,"UPDATE ISSUE_REGISTRATION
                             SET USER_NAME='$username',
                               DIVISION_ID='$division',
@@ -79,34 +81,36 @@ if (isset($_POST['update']))
     //die(print ($update));
 
     oci_execute($update);
-    echo '<script language="javascript">';
-    echo 'alert("Updated")';
-    echo '</script>';
-    header('Location:index.php');
+//    echo '<script language="javascript">';
+//    echo 'alert("Updated")';
+//    echo '</script>';
+    $_SESSION['updated'] = "update";
+    //die(print_r($_SESSION['updated']));
 
-
+   // header('Location:index.php');
 
 }
+
 if(isset($_POST['delete']))
 {
     $tableId1=$_POST['idval'];
     $delete=oci_parse($conn,"DELETE FROM ISSUE_REGISTRATION WHERE ID='$tableId1'");
     oci_execute($delete);
-    echo '<script language="javascript">';
-    echo 'alert("Deleted!!!")';
-    echo '</script>';
-    header('Location:index.php');
+    $_SESSION['deleted']="delete";
+   // header('Location:index.php');
 }
 
 if (array_key_exists('issue',$_GET)) {
     $showQuery=oci_parse($conn,"SELECT e.USER_NAME,e.ID,divi.DIVISION_NAME,dept.DEPARTMENT_NAME,sec.SECTION_NAME,e.ISSUE_DATE,mod.MAIN_MODULE,menu.MENU_NAME,e.SUPERVISOR,e.ISSUE_OF,e.ISSUE_DETAILS,e.REQUEST_TO,e.CRM_REF,e.IMPACT,loc.LOCATION_NAME FROM ISSUE_REGISTRATION e
-                            JOIN LIB_DIVISION divi ON e.DIVISION_ID=divi.ID
-                            JOIN LIB_DEPARTMENT dept ON e.DEPARTMENT_ID=dept.ID
-                            JOIN LIB_SECTION sec ON e.SECTIONS_ID=sec.ID
-                            JOIN MAIN_MODULE mod ON e.MODULES_ID=mod.M_MOD_ID
-                            JOIN MAIN_MENU menu ON e.MENU_ID=menu.M_MENU_ID
-                            JOIN LIB_LOCATION loc ON e.LOCATIONS_ID=loc.ID
+                           LEFT OUTER JOIN LIB_DIVISION divi ON e.DIVISION_ID=divi.ID
+                           LEFT OUTER JOIN LIB_DEPARTMENT dept ON e.DEPARTMENT_ID=dept.ID
+                           LEFT OUTER JOIN LIB_SECTION sec ON e.SECTIONS_ID=sec.ID
+                          LEFT OUTER JOIN MAIN_MODULE mod ON e.MODULES_ID=mod.M_MOD_ID
+                           LEFT OUTER JOIN MAIN_MENU menu ON e.MENU_ID=menu.M_MENU_ID
+                          LEFT OUTER JOIN LIB_LOCATION loc ON e.LOCATIONS_ID=loc.ID
+
                             ORDER BY e.ID DESC
+
 
                       ");
     oci_execute($showQuery);
@@ -124,17 +128,13 @@ if (array_key_exists('id',$_GET))
     $id=$_GET['id'];
     //die(print_r($id));
 
-    $upQuery=oci_parse($conn,"SELECT e.USER_NAME,e.ID,divi.ID as DIVISION_ID,divi.DIVISION_NAME,
-                            dept.ID as DEPARTMNT_ID,dept.DEPARTMENT_NAME,
-                            sec.ID as SECTION_ID,sec.SECTION_NAME,
-                            e.ISSUE_DATE,mod.M_MOD_ID as MODULE_ID,mod.MAIN_MODULE, MENU_ID, menu.MENU_NAME,e.SUPERVISOR,e.ISSUE_OF,e.ISSUE_DETAILS,e.REQUEST_TO,e.CRM_REF,e.IMPACT,loc.ID as LOCATION_ID,loc.LOCATION_NAME FROM ISSUE_REGISTRATION e
-
-                            JOIN LIB_DIVISION divi ON e.DIVISION_ID=divi.ID
-                            JOIN LIB_DEPARTMENT dept ON e.DEPARTMENT_ID=dept.ID
-                            JOIN LIB_SECTION sec ON e.SECTIONS_ID=sec.ID
-                            JOIN MAIN_MODULE mod ON e.MODULES_ID=mod.M_MOD_ID
-                            JOIN MAIN_MENU menu ON e.MENU_ID=menu.M_MENU_ID
-                            JOIN LIB_LOCATION loc ON e.LOCATIONS_ID=loc.ID WHERE e.ID=$id
+    $upQuery=oci_parse($conn,"SELECT e.USER_NAME,e.ID, e.DIVISION_ID,e.DEPARTMENT_ID,dept.DEPARTMENT_NAME,e.SECTIONS_ID,sec.SECTION_NAME,e.ISSUE_DATE,e.MODULES_ID,e.MENU_ID,mod.MAIN_MODULE,menu.MENU_NAME,e.SUPERVISOR,e.ISSUE_OF,e.ISSUE_DETAILS,e.REQUEST_TO,e.CRM_REF,e.IMPACT,e.LOCATIONS_ID,loc.LOCATION_NAME FROM ISSUE_REGISTRATION e
+                           LEFT OUTER JOIN LIB_DIVISION divi ON e.DIVISION_ID=divi.ID
+                           LEFT OUTER JOIN LIB_DEPARTMENT dept ON e.DEPARTMENT_ID=dept.ID
+                           LEFT OUTER JOIN LIB_SECTION sec ON e.SECTIONS_ID=sec.ID
+                          LEFT OUTER JOIN MAIN_MODULE mod ON e.MODULES_ID=mod.M_MOD_ID
+                           LEFT OUTER JOIN MAIN_MENU menu ON e.MENU_ID=menu.M_MENU_ID
+                          LEFT OUTER JOIN LIB_LOCATION loc ON e.LOCATIONS_ID=loc.ID WHERE e.ID=$id
 
                       ");
     oci_execute($upQuery);
@@ -143,7 +143,7 @@ if (array_key_exists('id',$_GET))
         $dataUp[]=$row;
     }
     echo json_encode($dataUp);
-   // die('<pre>'.print_r($dataUp,true));
+   // die(print_r($dataUp,true));
 }
 
 

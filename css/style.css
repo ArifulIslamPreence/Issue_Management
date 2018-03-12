@@ -1,19 +1,23 @@
 
 
+/*.container*/
+/*{*/
+    /*font-family:'Roboto';*/
+    /*width:1080px;*/
+   /*margin:30px auto 0;*/
+    /*display:block;*/
+    /*background:#FFF;*/
+    /*padding:10px 50px 50px;*/
+/*}*/
 select {
     width: 80px;
     padding: 5px;
     font-size: 16px;
     line-height: 1;
-    border: 0;
     border-radius: 5px;
     height: 34px;
-    background: url(http://cdn1.iconfinder.com/data/icons/cc_mono_icon_set/blacks/16x16/br_down.png) no-repeat right #ddd;
     -webkit-appearance: none;
-    background-position-x: 59px;
     -moz-appearance: none;
-    /*for chrome*/
-    -webkit-appearance:none;
 
 }
 
@@ -22,11 +26,10 @@ textarea {
     -webkit-appearance: textfield;
     -moz-appearance: textfield;
     appearance: textfield;
-    width: 80px;
+    width: 100%;
     height: 34px;
     padding: 5px;
     font-size: 16px;
-    background-color: #ddd;
     border-radius: 5px;
 }
 .userFont
@@ -44,6 +47,33 @@ textarea {
     height: 34px;
     padding: 5px;
     font-size: 16px;
-    background-color: #ddd;
     border-radius: 5px;
+}
+.tbDetails{
+    overflow: scroll;
+    background-color:#e6e6e6;
+}
+.tbrow
+{
+    background-color:#c4ddff;
+}
+.dated{
+    border: 1px solid rgb(169, 169, 169);
+}
+input[type=text], textarea {
+    -webkit-transition: all 0.30s ease-in-out;
+    -moz-transition: all 0.30s ease-in-out;
+    -ms-transition: all 0.30s ease-in-out;
+    -o-transition: all 0.30s ease-in-out;
+    outline: none;
+    padding: 3px 0px 3px 3px;
+    margin: 5px 1px 3px 0px;
+    border: 1px solid #DDDDDD;
+}
+
+input[type=text]:focus, textarea:focus {
+    box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+    padding: 3px 0px 3px 3px;
+    margin: 5px 1px 3px 0px;
+    border: 1px solid rgba(81, 203, 238, 1);
 }

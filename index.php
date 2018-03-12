@@ -1,5 +1,8 @@
 <?php
+
 require_once("controller.php");
+
+//print_r($_SESSION['updated'],true);
 ?>
 <html xmlns="http://www.w3.org/1999/html">
 <head>
@@ -10,20 +13,22 @@ require_once("controller.php");
     <link rel="stylesheet" href="css/bootstrap-datepicker.min.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 
+    <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+
 </head>
 <body>
 
 <form method="post" action="">
-<div class="container">
+<div class="container" >
     <div class="row">
         <input type="hidden" name="idval" id="idval">
     </div>
     <div class="row" >
        <div class="col-md-12">
            <div class="row">
-               <h4 class="text-center">
+               <h3 class="text-center">
                    Issue Registration
-               </h4>
+               </h3>
 
            </div>
 
@@ -42,17 +47,18 @@ require_once("controller.php");
     </div>
     <br>
     <div class="row">
+         <font color="blue"> *Required field</font>
         <div class="col-md-12">
                 <table class="table table-responsive user-info">
                     <tr>
-                        <th class="userFont">User</th>
+                        <th class="userFont">User*</th>
                         <th>Division</th>
                         <th>Department</th>
                         <th>Section</th>
                         <th>Location</th>
                         <th>Supervisor</th>
-                        <th class="userFont">Date</th>
-                        <th class="userFont">Issue Of</th>
+                        <th class="userFont">Date*</th>
+                        <th class="userFont">Issue Of*</th>
                         <th>Module</th>
                         <th>Page Name</th>
                     </tr>
@@ -62,7 +68,7 @@ require_once("controller.php");
                         </td>
                         <td>
                                 <select class="" name="division" id="divi" >
-                                    <option value="">Select</option>
+                                    <option value="">-Select-</option>
                                     <?php
                                     foreach($dataDivision as $v){?>
 
@@ -72,7 +78,7 @@ require_once("controller.php");
                         </td>
                         <td>
                             <select class="" name="department" id="dept">
-                                <option value="">Select</option>
+                                <option value="">-Select-</option>
                                 <?php
                                 foreach($dataDepartment as $v){?>
 
@@ -83,7 +89,7 @@ require_once("controller.php");
                         </td>
                         <td>
                             <select class="" name="section" id="section" >
-                                <option value="">Select</option>
+                                <option value="">-Select-</option>
                                 <?php
                                 foreach($dataSection as $v){?>
 
@@ -94,7 +100,7 @@ require_once("controller.php");
                         </td>
                         <td>
                             <select class="" name="location" id="location" >
-                                <option value="">Select</option>
+                                <option value="">-Select-</option>
                                 <?php
                                 foreach($dataLocation as $v){?>
 
@@ -103,13 +109,13 @@ require_once("controller.php");
                             </select>
                         </td>
                         <td>
-                            <textarea name="supervisor" id="supervisor" cols="23" rows="3"></textarea>
+                            <textarea name="supervisor" class="auto" id="supervisor" cols="23" rows="3"></textarea>
                         </td>
                         <td>
-                            <input type="text" name="issueDate" class="dated" id="when_published">
+                            <input type="text" name="date"  class="dated" id="when_published">
                         </td>
                         <td> <select class="" name="issueOf" id="issueof" >
-                                <option value="">Select</option>
+                                <option value="">-Select-</option>
                                 <?php
                                 foreach($IssueOf as $v){?>
 
@@ -119,7 +125,7 @@ require_once("controller.php");
                             </select>
                         </td>
                         <td>  <select class="" name="module" id="module"  >
-                                <option value="">Select</option>
+                                <option value="">-Select-</option>
                                 <?php
                                 foreach($dataModule as $v){?>
 
@@ -129,100 +135,69 @@ require_once("controller.php");
                             </select>
                         </td>
                         <td> <select class="" id="menu" name="menu">
-                                <option value="">Select</option>
+                                <option value="">-Select-</option>
 
-                                    <option value="">-select- </option>
+
 
                             </select>
                         </td>
 
 
                     </tr>
+                    <tr class="userFont"><th colspan="10">Issue Details*</th></tr>
+                    <tr><td colspan="10"><textarea   name="issueDetails" id="details" rows="3"></textarea></td></tr>
+                    <tr>
+                        <th class="userFont" colspan="1">Issue Date*</th>
+                        <th colspan="3">Request To</th>
+                        <th colspan="3">Logic CRM Ref</th>
+                        <th colspan="3">Impact</th>
+                    </tr>
+                    <tr>
+                        <td colspan="1"><input type="text" name="issueDate" class="dated" id="when_publishedxx" ></td>
+                        <td colspan="3"><textarea  class="auto" name="request" id="req" cols="23" rows="3"></textarea></td>
+                        <td colspan="3"><textarea name="crm"  id="crm" cols="23" rows="3"></textarea></td>
+                        <td colspan="3"><textarea name="impact"   id="impact" cols="60" rows="3"></textarea></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><input type="submit" id="submit" name="submit" value="Save" class="btn btn-primary save" onclick="BindTable()"></td>
+                        <td colspan="2"><input type="submit" id="update" name="update" value="update" class="btn btn-success update" disabled></td>
+                        <td colspan="2"><input type="submit" id="delete" name="delete" class="btn btn-danger delete"  value="Delete" disabled ></td>
+                        <td colspan="4"><button type="button" class="btn btn-default" name="refreash" id="refreshBtn">Refreash</button></td>
+                    </tr>
                 </table>
         </div>
     </div>
-    <div class="row">
-        <h4 class="userFont">Issue Details</h4>
-        <textarea class="form-control"  name="issueDetails" id="details" cols="199" rows="3"></textarea>
-        <br><br>
-        </div>
-    <div class="row">
-        <div class="tbl-scroll">
-            <table class="table table-bordered table-responsive register ">
-                <tr>
-                    <th class="userFont">Issue Date</th>
-                    <th>Request To</th>
-                    <th>Logic CRM Ref</th>
-                    <th>Impact</th>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="text" class="dated" id="when_publishedxx" >
-                    </td>
-                    <td>
-                        <textarea  class="auto" name="request" id="req" cols="23" rows="3"></textarea>
-                    </td>
-                    <td>
-                        <textarea name="crm" id="crm" cols="23" rows="3"></textarea>
-                    </td>
-                    <td>
-                        <textarea name="impact" id="impact" cols="60" rows="3"></textarea>
-                    </td>
-                </tr>
-
-            </table>
-        </div>
-        <br>
-        <div class="row">
-
-            <table class="table table-bordered table-responsive " >
-            <tr>
-                <td>
-                    <input type="submit" id="submit" name="submit" value="Save" class="btn btn-primary" onclick="BindTable()">
-                </td>
-                <td>
-                    <input type="submit" id="update" name="update" value="update" class="btn btn-success" disabled>
-                </td>
-                <td>
-                    <input type="submit" id="delete" name="delete" class="btn btn-danger"  value="Delete" disabled>
-                </td>
-                <td>
-                    <button type="button" class="btn btn-default" id="refreshBtn" ">Refreash</button>
-                </td>
-            </tr>
-
-            </table>
-
-
-        </div>
-        </div>
-
-    </div>
-
 </form>
+<div class="row tbDetails">
+    <table id="tbDetails" class="table table-bordered">
+        <tr class="tbrow">
 
-<table id="tbDetails" class="table table-bordered table-responsive">
-    <tr>
+            <th>Username</th>
+            <th>Division</th>
+            <th>Department</th>
+            <th>Section</th>
+            <th>Location</th>
+            <th>Supervisor</th>
+            <th>Issue Of</th>
+            <th>Module</th>
+            <th>Page Name</th>
+            <th>Issue Details</th>
+            <th>Issue Date</th>
+            <th>Request To</th>
+            <th>Logic CRM Ref</th>
+            <th>Impact</th>
+        </tr>
+        <tbody id="tableData" >
+        </tbody>
+    </table>
+</div>
 
-        <th>Username</th>
-        <th>Division</th>
-        <th>Department</th>
-        <th>Section</th>
-        <th>Location</th>
-        <th>Supervisor</th>
-        <th>Issue Of</th>
-        <th>Module</th>
-        <th>Page Name</th>
-        <th>Issue Details</th>
-        <th>Issue Date</th>
-        <th>Request To</th>
-        <th>Logic CRM Ref</th>
-        <th>Impact</th>
-    </tr>
-    <tbody id="tableData" >
 
-    </tbody>
-</table>
+
+</div>
+
+
+
 
 
 
@@ -232,34 +207,36 @@ require_once("controller.php");
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 
 
 <script>
-    $('.dated').click(function(){
-        $(this).datepicker({
 
-            format: 'yyyy-mm-dd'
+        $('.dated').click(function(){
+            $(this).datepicker({
+
+                format: 'yyyy-mm-dd'
+            });
+
         });
 
-    });
-
-</script>
+    </script>
 
 
 
-<script>
+    <script>
 
-    $(function() {
+        $(function() {
 
-        var availableTags = [];
-        <?php
+            var availableTags = [];
+            <?php
 
-            if(isset($dataName) && !empty($dataName)){
+                if(isset($dataName) && !empty($dataName)){
 
 
-        foreach($dataName as $userName){?>
+            foreach($dataName as $userName){?>
 
-        availableTags.push("<?php echo $userName; ?>")
+        availableTags.push("<?php echo $userName; ?>");
 
         <?php
               }
@@ -277,13 +254,10 @@ require_once("controller.php");
             });
 
         });
-
-        $('#refreshBtn').click(function(e){
-            e.preventDefault();
-          //  alert("clicked");
-            location.reload();
         });
-        })
+
+
+
 </script>
 <script>
     function Change(M_MODULE_ID)
@@ -344,42 +318,91 @@ require_once("controller.php");
 
 
     $(document).ready(function () {
+        <?php if(isset($_SESSION['updated'])){?>
+        var updated = "<?php echo ($_SESSION['updated']); ?>"
+      // alert(updated );
+        if(updated== "update"){
+            toastr.info('Updated ', {timeOut: 3000});
+            <?php unset($_SESSION['updated']);?>
+        }
+        <?php }
+        else if(isset($_SESSION['deleted']))
+        {  ?>
+        var deleted = "<?php echo ($_SESSION['deleted']);?> "
+       // alert(deleted);
+        if(deleted="delete")
+        {
+            toastr.error('Deleted!!', {timeOut: 3000});
+            <?php unset($_SESSION['deleted']);?>
+        }
+        <?php }  else if(isset($_SESSION['saved']))
+        {  ?>
+        var saved = "<?php echo ($_SESSION['saved']);?> "
+        //alert(saved);
+        if(saved="save")
+        {
+            toastr.success('Saved ', {timeOut: 3000});
+            <?php unset($_SESSION['saved']);?>
+        }
+        <?php }
+         session_destroy();
+         ?>
         BindTable();
     });
 </script>
 <script>
 
     $(document).ready(function () {
+        $('#refreshBtn').on('click',function(){
+            $("#idval").val('');
+            $("#user").val(' ');
+            $("#divi").val('');
+            $("#dept").val('');
+            $("#section").val('');
+            $("#location").val('');
+            $("#supervisor").val('');
+            $("#when_published").val('');
+            $("#issueof").val('');
+            $("#module").val('');
+            //$("#menu").val(firstelem.MENU_ID);
+            $("#details").val('');
+            $("#when_publishedxx").val('');
+            $("#req").val('');
+            $("#crm").val('');
+            $("#impact").val('');
+        });
         $("#tableData").on('click','.joy',function(){
             $( "#submit" ).prop( "disabled", true );
             $( "#update" ).prop( "disabled", false );
             $( "#delete" ).prop( "disabled", false );
             var id1=$(this).data('userid');
+
             $.ajax({
                     type: "GET",
                     url: "controller.php",
                     data: {id: id1},
 
                     success: function (response) {
-                        var firstelem = (JSON.parse(response)).shift();
-                        // alert(firstelem.ISSUE_OF);
+                       var firstelem = (JSON.parse(response)).shift();
+                        // alert(firstelem.DIVISION_ID);
+                        console.log(firstelem);
                         $("#idval").val(id1);
                         $("#user").val(firstelem.USER_NAME);
                         $("#divi").val(firstelem.DIVISION_ID);
-                        $("#dept").val(firstelem.DEPARTMNT_ID);
-                        $("#section").val(firstelem.SECTION_ID);
-                        $("#location").val(firstelem.LOCATION_ID);
+                        $("#dept").val(firstelem.DEPARTMENT_ID);
+                        $("#section").val(firstelem.SECTIONS_ID);
+                        $("#location").val(firstelem.LOCATIONS_ID);
                         $("#supervisor").val(firstelem.SUPERVISOR);
                         $("#when_published").val(firstelem.ISSUE_DATE);
                         $("#issueof").val(firstelem.ISSUE_OF);
-                        $("#module").val(firstelem.MODULE_ID);
+                        $("#module").val(firstelem.MODULES_ID);
                         //$("#menu").val(firstelem.MENU_ID);
                         $("#details").val(firstelem.ISSUE_DETAILS);
                         $("#when_publishedxx").val(firstelem.ISSUE_DATE);
                         $("#req").val(firstelem.REQUEST_TO);
                         $("#crm").val(firstelem.CRM_REF);
                         $("#impact").val(firstelem.IMPACT);
-                        Change(firstelem.MODULE_ID);
+                        Change(firstelem.MODULES_ID);
 
 
                     }
@@ -391,16 +414,8 @@ require_once("controller.php");
 
 
 </script>
-<script>
-    $(document).ready(function(){
-        $("testarea").focus(function(){
-            $(this).css("background-color", "#cccccc");
-        });
-        $("textarea").blur(function(){
-            $(this).css("background-color", "#ffffff");
-        });
-    });
-</script>
+
+
 
 <style>
     .joy{
